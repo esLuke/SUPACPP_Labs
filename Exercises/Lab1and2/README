@@ -1,0 +1,29 @@
+# SUPACPP Assignment 1 – Data Analysis
+
+This mini C++ project is for SUPACPP Assignment 1.  
+It reads 2D data from a CSV file, performs several simple analyses, and prints / saves the results.
+
+## Files
+
+- `AnalyseData.cxx`  
+  Main program. Shows a text menu and calls functions from `CustomFunctions.cxx`.
+
+- `CustomFunctions.h`  
+  Function declarations and the `Point` struct.
+
+- `CustomFunctions.cxx`  
+  Function implementations:
+  - `DataLoader` – load `(x, y)` points from `input2D_float.txt`
+  - `LinesPrinter` – print the first `N` data lines
+  - `MagLoader` / `magnitudes` – compute magnitudes `sqrt(x^2 + y^2)`
+  - `fitLine` – least–squares straight line fit `y = p x + q`
+  - `ErrLoader` – load errors from `error2D_float.txt`
+  - `chisq_per_ndof` – compute χ²/NDOF for the fit
+  - `pow_recursive` – recursive computation of `x^y`
+  - small helper functions to save results to text files
+
+## Compile and run
+You can compile everything with:
+g++ -std=c++20 AnalyseData.cxx CustomFunctions.cxx -o AnalyseData
+run:
+./AnalyseData
