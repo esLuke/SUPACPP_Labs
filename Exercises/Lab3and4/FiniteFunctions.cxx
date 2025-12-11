@@ -63,8 +63,18 @@ Integration by hand (output needed to normalise function when plotting)
 */ 
 double FiniteFunction::integrate(int Ndiv){ //private
   //ToDo write an integrator
-  return -99;  
+  double sum = 0.0;
+  double dx = (m_RMax-m_RMin)/(double) Ndiv;
+
+  for (int i=0; i< Ndiv; i++)
+  {
+    double x1 = m_RMin + i*dx;
+    double x2 = x1+dx;
+    sum += (this->callFunction(x1) + this->callFunction(x2));
+  }
+  return 0.5*sum*dx;  
 }
+
 double FiniteFunction::integral(int Ndiv) { //public
   if (Ndiv <= 0){
     std::cout << "Invalid number of divisions for integral, setting Ndiv to 1000" <<std::endl;
@@ -182,55 +192,38 @@ std::vector< std::pair<double,double> > FiniteFunction::makeHist(std::vector<dou
 //SUPACPP note: They syntax of the plotting code is not part of the course
 void FiniteFunction::generatePlot(Gnuplot &gp){
 
-  if (m_plotfunction==true && m_plotdatapoints==true && m_plotsamplepoints==true){
     gp << "set terminal pngcairo\n";
-    gp << "set output 'Outputs/png/"<<m_FunctionName<<".png'\n"; 
+    gp << "set output 'Plots/"<<m_FunctionName<<".png'\n"; 
     gp << "set xrange ["<<m_RMin<<":"<<m_RMax<<"]\n";
     gp << "set style line 1 lt 1 lw 2 pi 1 ps 0\n";
+
+  if (m_plotfunction==true && m_plotdatapoints==true && m_plotsamplepoints==true){
     gp << "plot '-' with linespoints ls 1 title '"<<m_FunctionName<<"', '-' with points ps 2 lc rgb 'blue' title 'sampled data', '-' with points ps 1 lc rgb 'black' pt 7 title 'data'\n";
     gp.send1d(m_function_scan);
     gp.send1d(m_samples);
     gp.send1d(m_data);
   }
   else if (m_plotfunction==true && m_plotdatapoints==true){
-    gp << "set terminal pngcairo\n";
-    gp << "set output 'Outputs/png/"<<m_FunctionName<<".png'\n"; 
-    gp << "set xrange ["<<m_RMin<<":"<<m_RMax<<"]\n";
-    gp << "set style line 1 lt 1 lw 2 pi 1 ps 0\n";
     gp << "plot '-' with linespoints ls 1 title '"<<m_FunctionName<<"', '-' with points ps 1 lc rgb 'black' pt 7 title 'data'\n";
     gp.send1d(m_function_scan);
     gp.send1d(m_data);
   }
   else if (m_plotfunction==true && m_plotsamplepoints==true){
-    gp << "set terminal pngcairo\n";
-    gp << "set output 'Outputs/png/"<<m_FunctionName<<".png'\n"; 
-    gp << "set xrange ["<<m_RMin<<":"<<m_RMax<<"]\n";
-    gp << "set style line 1 lt 1 lw 2 pi 1 ps 0\n";
     gp << "plot '-' with linespoints ls 1 title '"<<m_FunctionName<<"', '-' with points ps 2 lc rgb 'blue' title 'sampled data'\n";
     gp.send1d(m_function_scan);
     gp.send1d(m_samples);
   }
   else if (m_plotfunction==true){
-    gp << "set terminal pngcairo\n";
-    gp << "set output 'Outputs/png/"<<m_FunctionName<<".png'\n"; 
-    gp << "set xrange ["<<m_RMin<<":"<<m_RMax<<"]\n";
-    gp << "set style line 1 lt 1 lw 2 pi 1 ps 0\n";
     gp << "plot '-' with linespoints ls 1 title 'function'\n";
     gp.send1d(m_function_scan);
   }
 
   else if (m_plotdatapoints == true){
-    gp << "set terminal pngcairo\n";
-    gp << "set output 'Outputs/png/"<<m_FunctionName<<".png'\n"; 
-    gp << "set xrange ["<<m_RMin<<":"<<m_RMax<<"]\n";
     gp << "plot '-' with points ps 1 lc rgb 'black' pt 7 title 'data'\n";
     gp.send1d(m_data);
   }
 
   else if (m_plotsamplepoints == true){
-    gp << "set terminal pngcairo\n";
-    gp << "set output 'Outputs/png/"<<m_FunctionName<<".png'\n"; 
-    gp << "set xrange ["<<m_RMin<<":"<<m_RMax<<"]\n";
     gp << "plot '-' with points ps 2 lc rgb 'blue' title 'sampled data'\n";
     gp.send1d(m_samples);
   }
