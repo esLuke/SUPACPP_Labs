@@ -1,7 +1,7 @@
 CC=g++ #Name of compiler
 FLAGS=-std=c++20 -w #Compiler flags (the s makes it silent)
 TARGET=TestFiniteFunctions #Executable name
-OBJECTS=TestFiniteFunctions.o FiniteFunctions.o #CustomFunctions.o
+OBJECTS=TestFiniteFunctions.o FiniteFunctions.o AdvancedFunctions.o
 LIBS=-I ../../GNUplot/ -I/opt/homebrew/include -L/opt/homebrew/lib -lboost_iostreams
 
 #First target in Makefile is default
@@ -10,14 +10,14 @@ ${TARGET}:${OBJECTS} #Make target from objects
 	${CC} ${FLAGS} ${OBJECTS} ${LIBS} -o ${TARGET}
 	@make clean
 
-TestFiniteFunctions.o : TestFiniteFunctions.cxx FiniteFunctions.h
+TestFiniteFunctions.o : TestFiniteFunctions.cxx FiniteFunctions.h AdvancedFunctions.h
 	${CC} ${FLAGS} ${LIBS} -c TestFiniteFunctions.cxx
 
 FiniteFunctions.o : FiniteFunctions.cxx FiniteFunctions.h
 	${CC} ${FLAGS} ${LIBS} -c FiniteFunctions.cxx
 
-#CustomFunctions.o : CustomFunctions.cxx
-#	${CC} ${FLAGS} ${LIBS} -c CustomFunctions.cxx
+AdvancedFunctions.o : AdvancedFunctions.cxx AdvancedFunctions.h FiniteFunctions.h
+	${CC} ${FLAGS} ${LIBS} -c AdvancedFunctions.cxx
 	
 #CalculatePi.o : CalculatePi.cxx
 #	${CC} ${FLAGS} ${LIBS} -c CalculatePi.cxx

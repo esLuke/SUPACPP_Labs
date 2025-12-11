@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include "FiniteFunctions.h"
+#include "AdvancedFunctions.h"
 
 int main()
 {
@@ -25,9 +26,29 @@ int main()
 
     double xmin = -10.0;
     double xmax = 10.0;
-    FiniteFunction f(xmin, xmax, "NormalisedInvXsq");
+    int bins = 50;
 
-    f.plotData(data, 50, true);
+    std::cout << " *** Fitting Normal Distribution *** " << std::endl;
+    NormalDistribution norm(0.0, 2.0, xmin, xmax);
+    norm.plotData(data, bins, true);
+    norm.plotFunction();
+    norm.printInfo();
+
+    std::cout << " *** Fitting Cauchy-Lorentz Distribution *** " << std::endl;
+    CauchyDistribution cl(0.0, 1.5, xmin, xmax);
+    cl.plotData(data, bins, true);
+    cl.plotFunction();
+    cl.printInfo();
+
+    std::cout << " *** Fitting Crystal Ball Distribution *** " << std::endl;
+    CrystalDistribution cb(0.0, 1.92, 1.5, 2.0, xmin, xmax);
+    cb.plotData(data, bins, true);
+    cb.plotFunction();
+    cb.printInfo();
+
+    std::cout << " *** Fitting Incxsquared *** " << std::endl;
+    FiniteFunction f(xmin, xmax, "NormalisedInvXsq");
+    f.plotData(data, bins, true);
     f.plotFunction();
     f.printInfo();
 

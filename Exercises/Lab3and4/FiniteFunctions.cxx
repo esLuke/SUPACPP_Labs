@@ -61,7 +61,7 @@ double FiniteFunction::callFunction(double x) {return this->invxsquared(x);}; //
 Integration by hand (output needed to normalise function when plotting)
 ###################
 */ 
-double FiniteFunction::integrate(int Ndiv){ //private
+double FiniteFunction::integrate(int Ndiv){ 
   //ToDo write an integrator
   double sum = 0.0;
   double dx = (m_RMax-m_RMin)/(double) Ndiv;
@@ -103,6 +103,7 @@ void FiniteFunction::checkPath(std::string outfile){
 
 //Print (overridable)
 void FiniteFunction::printInfo(){
+  std::cout << "============ Information Summary ============" << std::endl;
   std::cout << "rangeMin: " << m_RMin << std::endl;
   std::cout << "rangeMax: " << m_RMax << std::endl;
   std::cout << "integral: " << m_Integral << ", calculated using " << m_IntDiv << " divisions" << std::endl;
