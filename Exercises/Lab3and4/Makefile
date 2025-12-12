@@ -4,9 +4,9 @@ TARGET=TestFiniteFunctions #Executable name
 OBJECTS=TestFiniteFunctions.o FiniteFunctions.o AdvancedFunctions.o
 LIBS=-I ../../GNUplot/ -I/opt/homebrew/include -L/opt/homebrew/lib -lboost_iostreams
 
-#First target in Makefile is default
+all: ${TARGET} CalculatePi
 ${TARGET}:${OBJECTS} #Make target from objects
-	@echo "Linking..."
+	@echo "Linking TestFiniteFunctions..."
 	${CC} ${FLAGS} ${OBJECTS} ${LIBS} -o ${TARGET}
 	@make clean
 
@@ -19,16 +19,16 @@ FiniteFunctions.o : FiniteFunctions.cxx FiniteFunctions.h
 AdvancedFunctions.o : AdvancedFunctions.cxx AdvancedFunctions.h FiniteFunctions.h
 	${CC} ${FLAGS} ${LIBS} -c AdvancedFunctions.cxx
 	
-#CalculatePi.o : CalculatePi.cxx
-#	${CC} ${FLAGS} ${LIBS} -c CalculatePi.cxx
+CalculatePi.o : CalculatePi.cxx
+	${CC} ${FLAGS} ${LIBS} -c CalculatePi.cxx
 
-#CalculatePi : CalculatePi.o
-#	@echo "Linking for CalculatePi..."
-#	${CC} ${FLAGS} CalculatePi.o -o CalculatePi
-#	@make clean
+CalculatePi : CalculatePi.o
+	@echo "Linking for CalculatePi..."
+	${CC} ${FLAGS} CalculatePi.o -o CalculatePi
+	@make clean
 	
 clean: #No targets just run shell command to rm object files and emacs backups
 	@rm -f *.o *~
 
 cleantarget: #Delete the exectuable
-	@rm -f ${TARGET}
+	@rm -f ${TARGET} CalculatePi

@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <random>
+#include <cmath>
 #include "FiniteFunctions.h"
 #include <filesystem> //To check extensions in a nice way
 
@@ -90,6 +92,51 @@ double FiniteFunction::integral(int Ndiv) { //public
 
 /*
 ###################
+// Sampling metroplis 
+###################
+*/
+
+std::vector<double> FiniteFunction::SampleMetropolis(int Nsamples, double width, int seed)
+{
+  std::vector<double> samples;
+  samples.reserve(Nsamples);
+
+  // 2 choice: input seed or rd;
+  // in the test stage can keep initial seed;
+  // then rd can be used after test without an input seed;
+  std::random_device rd;
+  std::mt19937 gen(seed ? seed: rd());
+
+  std::uniform_real_distribution<double> metroRange(m_RMin, m_RMax);
+  std::uniform_real_distribution<double> randomT(0.0, 1.0);
+  double mx0 = metroRange(gen);
+  double mf0 = this->callFunction(mx0);
+
+  for (int i = 0; i < Nsamples; i++)
+  {
+    std::normal_distribution<double> metroProposal(mx0, width);
+    double xProp = metroProposal(gen);
+
+    if (xProp<m_RMin || xProp>m_RMax)
+    {
+      samples.push_back(mx0);
+      continue;
+    }
+    double fProp = this->callFunction(xProp);
+    double mA= (mf0 == 0.0) ? 1.0: (fProp/mf0); // simplified acceptance calculation
+    if (mA >= 1.0 || randomT(gen)< mA)
+    {
+      mx0 = xProp;
+      mf0 = fProp;
+    }
+    samples.push_back(mx0);
+  }
+  return samples;
+}
+
+
+/*
+###################
 //Helper functions 
 ###################
 */
@@ -103,7 +150,7 @@ void FiniteFunction::checkPath(std::string outfile){
 
 //Print (overridable)
 void FiniteFunction::printInfo(){
-  std::cout << "============ Information Summary ============" << std::endl;
+  std::cout << "Information Summary: " << std::endl;
   std::cout << "rangeMin: " << m_RMin << std::endl;
   std::cout << "rangeMax: " << m_RMax << std::endl;
   std::cout << "integral: " << m_Integral << ", calculated using " << m_IntDiv << " divisions" << std::endl;
@@ -152,9 +199,9 @@ std::vector< std::pair<double,double> > FiniteFunction::scanFunction(int Nscan){
   double x = m_RMin;
   //We use the integral to normalise the function points
   if (m_Integral == NULL) {
-    std::cout << "Integral not set, doing it now" << std::endl;
+    //std::cout << "Integral not set, doing it now" << std::endl;
     this->integral(Nscan);
-    std::cout << "integral: " << m_Integral << ", calculated using " << Nscan << " divisions" << std::endl;
+    //std::cout << "integral: " << m_Integral << ", calculated using " << Nscan << " divisions" << std::endl;
   }
   //For each scan point push back the x and y values 
   for (int i = 0; i < Nscan; i++){
